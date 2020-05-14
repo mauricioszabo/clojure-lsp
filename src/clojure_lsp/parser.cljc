@@ -87,9 +87,14 @@
 
 ;;; END of ZIP part
 
-(defn log [ & args]
-  #?(:clj (apply log/warn args)
-     :cljs (apply println args)))
+#?(:cljs (defn log [ & args] (apply println args))
+   :clj (defn log
+          ([a] (log/warn a))
+          ([a b] (log/warn a b))
+          ([a b c] (log/warn a b c))
+          ([a b c d] (log/warn a b c d))
+          ([a b c d e] (log/warn a b c d e))
+          ([a b c d e f] (log/warn a b c d e f))))
 
 (declare find-usages*)
 (declare parse-destructuring)
