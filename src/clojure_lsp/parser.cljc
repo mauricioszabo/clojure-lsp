@@ -403,7 +403,10 @@
           :else
           scoped)))
     (catch #?(:clj Throwable :cljs :default) e
-      (log "bindings" (.getMessage e) (z/sexpr bindings-loc) (z/sexpr (z/up bindings-loc)))
+      #?(:clj
+         (log "bindings" (.getMessage e) (z/sexpr bindings-loc) (z/sexpr (z/up bindings-loc)))
+         :cljs
+         (log "bindings" e (z/sexpr bindings-loc) (z/sexpr (z/up bindings-loc))))
       (throw e))))
 
 (defn parse-params
@@ -433,7 +436,10 @@
            :else
            scoped)))
      (catch #?(:clj Throwable :cljs :default) e
-       (log "params" (.getMessage e) (z/sexpr params-loc))
+       #?(:clj
+          (log "params" (.getMessage e) (z/sexpr params-loc))
+          :cljs
+          (log "params" e (z/sexpr params-loc)))
        (throw e)))))
 
 (defn handle-ignored
@@ -1125,7 +1131,10 @@
          op-loc
          (handle-rest op-loc context scoped)))
      (catch #?(:clj Throwable :cljs :default) e
-       (log #_e "Cannot parse" (:uri @context) "\n" (.getMessage e) "\n" (z/string loc))))))
+       #?(:clj
+          (log #_e "Cannot parse" (:uri @context) "\n" (.getMessage e) "\n" (z/string loc))
+          :cljs
+          (log #_e "Cannot parse" (:uri @context) "\n" e "\n" (z/string loc)))))))
 
 (defn- find-usages*
   ([loc context scoped] (find-usages* loc context scoped false))
@@ -1208,7 +1217,10 @@
                                 (z/of-string)
                                 (zm/up))
                             (catch #?(:clj Throwable :cljs :default) e
-                              (println "Cannot read" uri (.getMessage e))))]
+                              #?(:clj
+                                 (println "Cannot read" uri (.getMessage e))
+                                 :cljs
+                                 (println "Cannot read" uri e))))]
      (let [macro-defs (merge default-macro-defs client-macro-defs)
            requires {:clj #{'clojure.core}
                      :cljs #{'cljs.core}}]
