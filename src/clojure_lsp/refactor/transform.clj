@@ -84,8 +84,7 @@
   (foo (-> (quux (qux x w))
            (bar y)) z)
   (->> (bar w (qux y x))
-       (foo z))
-  )
+       (foo z)))
 
 (defn- can-thread? [zloc]
   (= (z/tag zloc) :list))
@@ -372,9 +371,9 @@
         fn-sym (symbol fn-name)
         {:keys [declared scoped]} (->> usages
                                        (group-by #(condp set/subset? (:tags %)
-                                               #{:declare} :declared
-                                               #{:scoped} :scoped
-                                               nil))
+                                                   #{:declare} :declared
+                                                   #{:scoped} :scoped
+                                                   nil))
                                        (medley/map-vals #(set (map :sym %))))
         used-syms (mapv (comp symbol name) (set/difference scoped declared))
         expr-edit (-> (z/of-string "")
@@ -496,22 +495,22 @@
         (edit/mark-position :reformat)
         (cond->
          (= missing-type :class)
-          (->
-           (edit/find-or-create-libspec :import) ; go to import
-           (zz/insert-right (n/newlines 1))
-           (z/insert-right (symbol missing))) ; add class
+         (->
+          (edit/find-or-create-libspec :import) ; go to import
+          (zz/insert-right (n/newlines 1))
+          (z/insert-right (symbol missing))) ; add class
 
-          (= missing-type :ns)
-          (->
-           (edit/find-or-create-libspec :require) ; go to require
-           (zz/insert-right (n/newlines 1))
-           (z/insert-right [(symbol missing)]) ; add require vec and ns
-           (z/right))
+         (= missing-type :ns)
+         (->
+          (edit/find-or-create-libspec :require) ; go to require
+          (zz/insert-right (n/newlines 1))
+          (z/insert-right [(symbol missing)]) ; add require vec and ns
+          (z/right))
 
-          (and sym-ns (= missing-type :ns)) ; if there was a requested ns `str/trim`
-          (->
-           (z/append-child :as) ; add :as
-           (z/append-child (symbol sym-ns)))))) ; as prefix
+         (and sym-ns (= missing-type :ns)) ; if there was a requested ns `str/trim`
+         (->
+          (z/append-child :as) ; add :as
+          (z/append-child (symbol sym-ns)))))) ; as prefix
 
   (defn replace-ns
     [zloc [new-ns]]

@@ -1131,6 +1131,7 @@
          op-loc
          (handle-rest op-loc context scoped)))
      (catch #?(:clj Throwable :cljs :default) e
+       (.log js/console e)
        #?(:clj
           (log #_e "Cannot parse" (:uri @context) "\n" (.getMessage e) "\n" (z/string loc))
           :cljs

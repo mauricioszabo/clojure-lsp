@@ -1,6 +1,5 @@
 (ns clojure-lsp.shared
-  (:require
-    [clojure.string :as string]))
+  (:require [clojure.string :as string]))
 
 (defn uri->file-type [uri]
   (cond
@@ -12,4 +11,3 @@
 (defn ->range [{:keys [row end-row col end-col]}]
   {:start {:line (dec row) :character (dec col)}
    :end {:line (dec end-row) :character (dec end-col)}})
-
